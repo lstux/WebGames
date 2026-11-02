@@ -17,10 +17,10 @@ roms/
 ```
 
 Les archives `.zip` / `.7z` sont acceptées. `tools/build-sd.sh` copie ces fichiers vers
-la carte SD et génère `roms.json` (le navigateur ne peut pas lister un dossier).
+`webgames/roms/` et génère `webgames/roms.json` (le navigateur ne peut pas lister un dossier).
 
 Pour ajouter des ROMs directement sur la carte, sans tout reconstruire :
 
 ```bash
-node tools/gen-catalog.mjs roms /chemin/carte_sd/roms /chemin/carte_sd/roms.json
+node tools/gen-catalog.mjs roms /chemin/carte_sd/webgames/roms /chemin/carte_sd/webgames/roms.json
 ```

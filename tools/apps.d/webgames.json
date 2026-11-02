@@ -1,0 +1,7 @@
+{
+  "name": "webgames",
+  "builtin": true,
+  "title": "WebGames",
+  "desc": "Jeux d'arcade et émulateurs rétro",
+  "icon": "🎮"
+}

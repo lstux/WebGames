@@ -7,40 +7,36 @@ Tout le code s'exécute côté client : le microcontrôleur ne sert que des fich
 - **Émulateurs** : NES, SNES, Game Boy / Color / Advance, Mega Drive, Master System,
   Game Gear, PC Engine, Amstrad CPC via [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS).
   Les ROMs sont fournies par l'utilisateur.
+- **Apps perso** : MathPulse, Slovingo, TravelBook, WebApps, construites depuis GitHub.
 
 ## Démarrage rapide
 
 ```bash
-tools/fetch-vendor.sh      # télécharge EmulatorJS (cores) et LittleJS Arcade dans vendor/
-cp ~/mes_roms/... roms/nes/ # optionnel : voir roms/README.md
-tools/build-sd.sh          # produit sd/ ; option --gzip pour des copies .gz
+cp ~/mes_roms/... roms/nes/          # optionnel : voir roms/README.md
+tools/build-sd.sh --out /exemple/sd  # tout en une commande
 ```
 
-Copie ensuite le **contenu** de `sd/` à la racine de la carte SD (FAT32).
+Le script télécharge EmulatorJS et LittleJS Arcade, construit tes apps GitHub
+(`tools/apps.d/*.json`) et produit :
 
-### Avec l'installeur de sites (`lstux-github/`)
-
-WebGames est aussi un site comme les autres pour `lstux-github/sd-sites.sh` : la conf
-`lstux-github/sites.d/webgames.json` clone ce dépôt, lance `tools/build-sd.sh` et publie le
-résultat dans `<carte>/webgames/`, à côté de tes autres apps. La page d'accueil de la carte
-affiche une tuile « WebGames ».
-
-```bash
-cd lstux-github
-./sd-sites.sh /media/sd                 # tous les sites de sites.d/
-./sd-sites.sh /media/sd --only webgames # seulement WebGames (mise à jour)
+```
+/exemple/sd/
+├── index.html     page d'accueil, une tuile par site
+├── webgames/      Arcade + Émulateurs (+ tes ROMs)
+├── mathpulse/  slovingo/  travelbook/  webapps/
 ```
 
-Chaque mise à jour remplace le dossier `webgames/`, mais l'option `keep` de la conf conserve
-`roms/` et `roms.json`. Tes ROMs se déposent donc **directement sur la carte**, sans repasser par git :
+Copie ensuite le **contenu** du dossier à la racine de la carte SD (FAT32).
+⚠️ Le dossier de sortie est **vidé** à chaque lancement : vise un dossier de travail,
+pas la carte elle-même. Options : `--gzip` (copies `.gz` de `webgames/`),
+`--no-apps` (hors ligne, sans les apps GitHub).
 
-```bash
-cp ~/roms/nes/*.nes /media/sd/webgames/roms/nes/
-node tools/gen-catalog.mjs roms /media/sd/webgames/roms /media/sd/webgames/roms.json
-```
+### Tes apps GitHub
 
-Prérequis supplémentaires : `jq`, `flock`. L'archive EmulatorJS (~300 Mo) est retéléchargée à
-chaque mise à jour de WebGames.
+Un fichier JSON par app dans `tools/apps.d/` (repo, branche, commandes de build, dossier
+publié, titre, icône) ; le script les clone, les construit avec `BASE_PATH=/<nom>/` et les
+copie dans `<sortie>/<nom>/`. `tools/build-apps.sh --help` détaille le format. Une app qui
+échoue n'empêche pas les autres ; ajouter une app = ajouter un fichier JSON.
 
 Pour tester sans ESP32 :
 
@@ -48,13 +44,14 @@ Pour tester sans ESP32 :
 python3 -m http.server 8080 --directory sd   # puis http://localhost:8080
 ```
 
-Prérequis : `bash`, `curl`, `git`, `node` ≥ 18, et `7z` (p7zip) ou `python3` + `py7zr`.
+Prérequis : `bash`, `curl`, `git`, `node` ≥ 18, `jq`, `flock`, `python3` (builds des apps), et `7z` (p7zip) ou `py7zr`.
 
 ## Structure
 
 ```
-web/        lanceur et page d'émulation (copiés tels quels à la racine de la carte)
-tools/      fetch-vendor.sh, build-sd.sh, gen-catalog.mjs, vendor.conf (versions épinglées)
+web/        lanceur et page d'émulation (publiés dans webgames/)
+tools/      build-sd.sh (point d'entrée), build-apps.sh + apps.d/ (apps GitHub),
+            fetch-vendor.sh + vendor.conf (versions épinglées), gen-catalog.mjs
 roms/       tes ROMs (ignorées par git)
 vendor/     composants tiers téléchargés (ignorés par git)
 sd/         sortie prête pour la carte SD (ignorée par git)

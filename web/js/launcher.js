@@ -70,8 +70,8 @@
     if (!total) {
       return el('div', { class: 'empty' },
         el('p', {}, 'Aucune ROM trouvée.'),
-        el('p', {}, 'Copie tes ROMs dans roms/<système>/ sur la carte SD (ex. roms/nes/jeu.nes), '
-          + 'puis régénère roms.json avec tools/gen-catalog.mjs.'));
+        el('p', {}, 'Mets tes ROMs dans roms/<système>/ du dépôt (ex. roms/nes/jeu.nes), '
+          + 'puis relance tools/build-sd.sh. Sur la carte : webgames/roms/<système>/ + tools/gen-catalog.mjs.'));
     }
     return wrap;
   }
