@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1117">
+<title>WebGames</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>🎮 WebGames</h1>
+  <nav role="tablist">
+    <a href="#arcade" id="tab-arcade" role="tab">Arcade</a>
+    <a href="#emulateurs" id="tab-emulateurs" role="tab">Émulateurs</a>
+  </nav>
+  <input id="search" type="search" placeholder="Rechercher…" aria-label="Rechercher">
+</header>
+
+<main id="view" aria-live="polite">Chargement…</main>
+
+<footer>
+  Code sous <a href="licenses/WebGames-GPL-3.0.txt">GPL v3</a> ·
+  <a href="licenses/THIRD_PARTY.md">Composants tiers</a> ·
+  Servi par un ESP32, exécuté dans ton navigateur.
+</footer>
+
+<script src="js/launcher.js"></script>
+</body>
+</html>

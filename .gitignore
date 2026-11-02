@@ -1,0 +1,13 @@
+# Dépendances tierces téléchargées par tools/fetch-vendor.sh
+/vendor/
+
+# Contenu prêt à copier sur la carte SD (généré par tools/build-sd.sh)
+/sd/
+
+# ROMs fournies par l'utilisateur : jamais versionnées
+/roms/*
+!/roms/README.md
+
+node_modules/
+*.log
+.DS_Store

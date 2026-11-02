@@ -1,0 +1,12 @@
+{
+  "nes":         { "label": "NES / Famicom",      "emoji": "🕹️", "cores": ["fceumm", "nestopia"],            "exts": ["nes", "fds", "unf", "unif"] },
+  "snes":        { "label": "Super Nintendo",     "emoji": "🎮", "cores": ["snes9x"],                         "exts": ["smc", "sfc", "swc", "fig"] },
+  "gb":          { "label": "Game Boy",           "emoji": "🟩", "cores": ["gambatte", "mgba"],               "exts": ["gb", "dmg"] },
+  "gbc":         { "label": "Game Boy Color",     "emoji": "🌈", "cores": ["gambatte", "mgba"],               "exts": ["gbc"] },
+  "gba":         { "label": "Game Boy Advance",   "emoji": "🟪", "cores": ["mgba"],                           "exts": ["gba"] },
+  "megadrive":   { "label": "Mega Drive / Genesis","emoji": "⚫", "cores": ["genesis_plus_gx", "picodrive"],   "exts": ["md", "smd", "gen", "bin"] },
+  "mastersystem":{ "label": "Master System",      "emoji": "🔴", "cores": ["smsplus", "genesis_plus_gx"],     "exts": ["sms"] },
+  "gamegear":    { "label": "Game Gear",          "emoji": "🔵", "cores": ["genesis_plus_gx", "smsplus"],     "exts": ["gg"] },
+  "pcengine":    { "label": "PC Engine",          "emoji": "🟠", "cores": ["mednafen_pce"],                   "exts": ["pce"] },
+  "cpc":         { "label": "Amstrad CPC",        "emoji": "💾", "cores": ["cap32", "crocods"],               "exts": ["dsk", "sna", "cdt", "tap", "cpr"] }
+}

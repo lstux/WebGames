@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WebGames – Émulateur</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  html, body { height: 100%; margin: 0; background: #000; overflow: hidden; }
+  #game { width: 100%; height: 100%; }
+  #back { position: fixed; top: .5rem; left: .5rem; z-index: 10; opacity: .6; }
+  #back:hover, #back:focus { opacity: 1; }
+  #error { color: #ff8080; padding: 2rem; font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<a id="back" class="btn" href="index.html#emulateurs">← Retour</a>
+<div id="game"></div>
+<script>
+  // Paramètres : play.html?core=fceumm&rom=roms/nes/jeu.nes[&name=Titre][&bios=roms/bios.bin]
+  const p = new URLSearchParams(location.search);
+  const core = p.get('core');
+  const rom = p.get('rom');
+
+  // Garde-fous : on ne charge que des chemins relatifs du même serveur.
+  const safe = (v) => typeof v === 'string' && !/^[a-z][a-z0-9+.-]*:|^\/\/|\.\.\//i.test(v);
+  if (!/^[a-z0-9_]+$/i.test(core || '') || !safe(rom)) {
+    document.getElementById('game').innerHTML = '<p id="error">Paramètres invalides : core et rom sont requis.</p>';
+  } else {
+    window.EJS_player = '#game';
+    window.EJS_core = core;
+    window.EJS_gameUrl = rom;
+    window.EJS_gameName = p.get('name') || rom.split('/').pop().replace(/\.[^.]+$/, '');
+    if (safe(p.get('bios'))) window.EJS_biosUrl = p.get('bios');
+    window.EJS_pathtodata = 'emulatorjs/data/';
+    window.EJS_startOnLoaded = true;
+    // HTTP sur IP locale = contexte non sécurisé : pas de SharedArrayBuffer, donc pas de threads.
+    window.EJS_threads = false;
+    const s = document.createElement('script');
+    s.src = 'emulatorjs/data/loader.js';
+    document.body.appendChild(s);
+  }
+</script>
+</body>
+</html>
