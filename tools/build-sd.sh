@@ -46,11 +46,13 @@ cp "$A"/images/*.png "$OUT/arcade/images/"
 node tools/gen-catalog.mjs arcade "$A" "$OUT/catalog/arcade.json"
 
 # 4. ROMs de l'utilisateur (optionnelles) + leur catalogue.
-mkdir -p "$OUT/roms"
-if [[ -d roms ]]; then
+# Rien n'est créé s'il n'y a pas de ROMs dans le dépôt : ainsi un roms/ déjà présent
+# sur la carte n'est pas masqué (voir « keep » dans lstux-github/sites.d/webgames.json).
+if [[ -d roms ]] && [[ -n "$(find roms -mindepth 1 -maxdepth 1 ! -name README.md -print -quit)" ]]; then
+  mkdir -p "$OUT/roms"
   find roms -mindepth 1 -maxdepth 1 ! -name README.md -exec cp -r {} "$OUT/roms/" \;
+  node tools/gen-catalog.mjs roms "$OUT/roms" "$OUT/roms.json" web/data/systems.json
 fi
-node tools/gen-catalog.mjs roms "$OUT/roms" "$OUT/roms.json" web/data/systems.json
 
 # 5. Licences (obligation de redistribution : GPL, MIT).
 mkdir -p "$OUT/licenses"

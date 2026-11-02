@@ -18,6 +18,30 @@ tools/build-sd.sh          # produit sd/ ; option --gzip pour des copies .gz
 
 Copie ensuite le **contenu** de `sd/` à la racine de la carte SD (FAT32).
 
+### Avec l'installeur de sites (`lstux-github/`)
+
+WebGames est aussi un site comme les autres pour `lstux-github/sd-sites.sh` : la conf
+`lstux-github/sites.d/webgames.json` clone ce dépôt, lance `tools/build-sd.sh` et publie le
+résultat dans `<carte>/webgames/`, à côté de tes autres apps. La page d'accueil de la carte
+affiche une tuile « WebGames ».
+
+```bash
+cd lstux-github
+./sd-sites.sh /media/sd                 # tous les sites de sites.d/
+./sd-sites.sh /media/sd --only webgames # seulement WebGames (mise à jour)
+```
+
+Chaque mise à jour remplace le dossier `webgames/`, mais l'option `keep` de la conf conserve
+`roms/` et `roms.json`. Tes ROMs se déposent donc **directement sur la carte**, sans repasser par git :
+
+```bash
+cp ~/roms/nes/*.nes /media/sd/webgames/roms/nes/
+node tools/gen-catalog.mjs roms /media/sd/webgames/roms /media/sd/webgames/roms.json
+```
+
+Prérequis supplémentaires : `jq`, `flock`. L'archive EmulatorJS (~300 Mo) est retéléchargée à
+chaque mise à jour de WebGames.
+
 Pour tester sans ESP32 :
 
 ```bash

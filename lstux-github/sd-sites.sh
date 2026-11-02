@@ -22,6 +22,8 @@
 #             de travail (".." est inscriptible). Variables fournies : BASE_PATH (ex. /mathpulse/), SITE_NAME
 #   output    dossier a publier, relatif au clone (defaut : "." = le clone)
 #   base_path chemin ou le site sera servi (defaut : /<name>/ ; commence et finit par /)
+#   keep      liste de chemins (relatifs au site) a conserver quand le site est remplace, s'ils existent sur la
+#             carte et ne sont pas produits par le build (ex. ["roms", "roms.json"] : fichiers ajoutes a la main)
 #   title, desc, icon (emoji), listed:false   presentation sur la page d'accueil
 # Le contenu publie doit avoir un index.html a sa racine.
 #
@@ -255,6 +257,19 @@ build_site() { # conf.json  (execute dans un sous-shell : die n'arrete que ce si
   rm -rf "${new}"
   mkdir -p "${new}" || die "creation de ${new} impossible"
   cp -R "${root}/." "${new}/" || { rm -rf "${new}"; die "copie sur la carte impossible"; }
+
+  # Chemins a conserver (renommage FAT, donc instantane meme pour de gros fichiers)
+  jq -r 'if (.keep|type)=="array" then .keep[] elif (.keep|type)=="string" then .keep else empty end' "${conf}" > "${work}/keep.list"
+  while IFS= read -r kp <&3; do
+    case "${kp}" in ''|/*|*..*|*[!A-Za-z0-9._/-]*) rm -rf "${new}"; die "chemin keep invalide : '${kp}'" ;; esac
+    kp="${kp%/}"
+    if [ -e "${DEST}/${name}/${kp}" ] && [ ! -e "${new}/${kp}" ]; then
+      mkdir -p "${new}/$(dirname "${kp}")"
+      mv "${DEST}/${name}/${kp}" "${new}/${kp}" || { rm -rf "${new}"; die "conservation de ${kp} impossible"; }
+      printf "[%s] conserve : %s\n" "${name}" "${kp}"
+    fi
+  done 3< "${work}/keep.list"
+
   rm -rf "${DEST:?}/${name}"
   mv "${new}" "${DEST}/${name}" || die "remplacement de ${DEST}/${name} impossible"
   printf "[%s] publie : %s  (%s Ko, servi en %s)\n" "${name}" "${DEST}/${name}" "${need_kb}" "${base}"
